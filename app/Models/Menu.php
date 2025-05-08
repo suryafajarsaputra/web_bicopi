@@ -10,15 +10,15 @@ class Menu extends Model
 {
     use HasFactory;
 
-    protected $table = 'menu'; // Sesuaikan dengan nama tabel di database
+    protected $table = 'menu'; // Nama tabel di database
 
-    protected $primaryKey = 'id_menu'; // Set primary key sesuai tabel
+    protected $primaryKey = 'id_menu'; // Primary key yang digunakan
 
-    public $incrementing = false; // UUID bukan auto-increment
+    public $incrementing = false; // Karena menggunakan UUID
 
     protected $keyType = 'string'; // UUID adalah string
 
-    public $timestamps = false; // Matikan timestamps karena tidak ada updated_at
+    public $timestamps = false; // Tidak pakai created_at dan updated_at
 
     protected $fillable = [
         'id_menu',
@@ -29,15 +29,27 @@ class Menu extends Model
         'id_kategori_menu',
     ];
 
-    // Boot method untuk otomatis mengisi id_menu dengan UUID
+    /**
+     * Saat model dibuat, isi otomatis UUID jika belum ada.
+     */
     protected static function boot()
     {
         parent::boot();
 
         static::creating(function ($model) {
             if (empty($model->id_menu)) {
-                $model->id_menu = Str::uuid(); // Set UUID otomatis
+                $model->id_menu = (string) Str::uuid(); // Isi UUID otomatis
             }
         });
     }
+
+    /**
+     * Relasi ke tabel kategori_menu.
+     * Setiap menu punya satu kategori.
+     */
+    public function kategori()
+{
+    return $this->belongsTo(KategoriMenu::class, 'id_kategori_menu');
+}
+
 }

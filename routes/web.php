@@ -25,7 +25,7 @@ Route::get('/receipt', function (Request $request) {
         'totalHarga' => $request->query('totalHarga'),
     ]);
 })->name('receipt');
-
+Route::get('/produk/detail/{id}', [ProductController::class, 'show'])->name('produk.detail');
 // Rute untuk keranjang belanja
 Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
 Route::get('/cart', [CartController::class, 'viewCart'])->name('cart.view');
